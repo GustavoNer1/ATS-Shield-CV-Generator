@@ -30,20 +30,32 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 
 def get_openai_api_key():
-    api_key = None
-
     try:
-        api_key = st.secrets.get("OPENAI_API_KEY")
+        if "OPENAI_API_KEY" in st.secrets:
+            return st.secrets["OPENAI_API_KEY"]
     except Exception:
-        api_key = None
+        pass
 
-    if not api_key:
-        api_key = os.getenv("OPENAI_API_KEY")
+    api_key = os.getenv("OPENAI_API_KEY")
+    if api_key:
+        return api_key
 
-    return api_key
+    return None
 
 
 OPENAI_API_KEY = get_openai_api_key()
+
+
+# ==================== DEBUG TEMPORÁRIO ====================
+# Descomente se quiser diagnosticar a leitura da chave
+# st.write("Diretório atual:", os.getcwd())
+# try:
+#     st.write("Chaves em st.secrets:", list(st.secrets.keys()))
+# except Exception as e:
+#     st.write("Erro ao ler st.secrets:", str(e))
+# st.write("Tem OPENAI_API_KEY em st.secrets?", "OPENAI_API_KEY" in st.secrets if hasattr(st, "secrets") else False)
+# st.write("Tem OPENAI_API_KEY no ambiente?", bool(os.getenv("OPENAI_API_KEY")))
+# st.write("OPENAI_API_KEY carregada?", bool(OPENAI_API_KEY))
 
 
 # --- CSS CUSTOMIZADO PARA VISUAL PROFISSIONAL ---
